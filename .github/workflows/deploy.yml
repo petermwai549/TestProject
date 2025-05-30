@@ -33,8 +33,12 @@ jobs:
             # Check if the directory is empty (no Git repo)
             if [ ! -d .git ]; then
               echo "Cloning repository for the first time..."
-              git clone https://github.com/petermwai549/TestProject.git ${{ secrets.PROJECT_PATH }}
+              git clone https://github.com/petermwai549/TestProject.git .
+              # List files to verify the repo is cloned
+              ls -la
             fi
+            
+      
 
             # Pull latest changes (in case the repo was already cloned)
             git pull origin main

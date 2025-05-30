@@ -8,7 +8,7 @@ import { Head, Link, useForm,usePage } from '@inertiajs/react';
 
 export default function Register() {
     const { tenant } = usePage().props; // Access tenant directly
-    // console.log(tenant);
+    console.log(tenant);
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',

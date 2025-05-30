@@ -37,8 +37,6 @@ jobs:
               # List files to verify the repo is cloned
               ls -la
             fi
-            
-      
 
             # Pull latest changes (in case the repo was already cloned)
             git pull origin main
@@ -64,9 +62,15 @@ jobs:
             php artisan route:cache
             php artisan view:cache
             php artisan optimize:clear
+
+            # 6. Restart PHP-FPM (adjust version if needed)
+            sudo systemctl restart php8.4-fpm
+
             php artisan cache:clear
 
             # Fix permissions (if needed)
             # chown -R ${{ secrets.SSH_USER }}:www-data .
             # chmod -R 775 storage bootstrap/cache
+
+      
           EOF

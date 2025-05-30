@@ -28,13 +28,13 @@ Route::middleware([
 ])->name('tenant.')->group(function () {
 
     Route::get('/', function () {
-        return Inertia::render('Welcome', [
+        return Inertia::render('TenantWelcome', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'laravelVersion' => Application::VERSION,
             'phpVersion' => PHP_VERSION,
             'tenant' => tenant('id')
-        ]);
+        ]); 
     })->name('welcome');
 
     Route::middleware('auth')->prefix('app')->group(function () {

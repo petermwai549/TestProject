@@ -15,7 +15,7 @@ Route::middleware('guest')->prefix('app/auth')->group(function () {
     // return tenant('id');
     Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store'])->name('register.post');
+    Route::post('register', [RegisteredUserController::class, 'store'])->name('register.post'); 
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
 

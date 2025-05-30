@@ -20,18 +20,49 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
+
       - name: Deploy over SSH
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            # Create directory if it doesn't exist
+            mkdir -p ${{ secrets.PROJECT_PATH }}
+
+            # Navigate into the directory
             cd ${{ secrets.PROJECT_PATH }}
+
+            # Check if the directory is empty (no Git repo)
+            if [ ! -d .git ]; then
+              echo "Cloning repository for the first time..."
+              git clone https://github.com/petermwai549/TestProject.git .
+            fi
+
+            # Pull latest changes (in case the repo was already cloned)
             git pull origin main
+
+            # Install Composer dependencies
             composer install --no-interaction --prefer-dist --optimize-autoloader
-            php artisan key:generate
+
+            # Generate Laravel .env (if not exists)
+            if [ ! -f .env ]; then
+              cp .env.example .env
+              php artisan key:generate
+            fi
+
+            # Run database migrations
             php artisan migrate --force
+
+            # Install & build frontend assets
             npm install
-            npm run build 
+            npm run build
+
+            # Optimize Laravel
             php artisan config:cache
             php artisan route:cache
+            php artisan view:cache
+            php artisan optimize:clear
             php artisan cache:clear
-            sudo chmod 777 -R *
+
+            # Fix permissions (if needed)
+            # chown -R ${{ secrets.SSH_USER }}:www-data .
+            # chmod -R 775 storage bootstrap/cache
           EOF
